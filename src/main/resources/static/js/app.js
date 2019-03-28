@@ -33,7 +33,7 @@ function disconnect() {
 }
 
 function sendName() {
-    stompClient.send("/app/hello", {}, JSON.stringify({ 'fpogx': 1.23, 'fpogy': 2.34 }));
+    stompClient.send("/app/connect", {}, null);
 }
 
 function showGreeting(message) {
