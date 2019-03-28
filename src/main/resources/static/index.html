@@ -1,53 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
-    <link href="lib/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <title>Index</title>
+
+    <!-- LIB -->
+    <link href="lib/bootstrap-grid.min.css" rel="stylesheet">
     <script src="lib/jquery.min.js"></script>
     <script src="lib/sockjs.min.js"></script>
     <script src="lib/stomp.min.js"></script>
+
+    <!-- CUSTOM -->
+    <link href="css/style.css" rel="stylesheet">
     <script src="js/app.js"></script>
+    
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
-            </form>
+    <div class="container-fluid">
+
+        <!-- header -->
+        <div class="row">
+            <div class="col-lg-2 col-md-1 col-sm-0"></div>
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                ovo je header
+            </div>
+            <div class="col-lg-2 col-md-1 col-sm-0"></div>
         </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">What is your name?</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                </div>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Greetings</th>
-                </tr>
-                </thead>
-                <tbody id="greetings">
-                </tbody>
-            </table>
+
+        <!-- pitanje -->
+        <div class="row justify-content-center">
+            <div class="pitanje col-lg-8 col-md-8 col-sm-12">
+                <p class="pitanje-redni-broj">1.</p>
+                <p class="pitanje-tekst">Tekst pitanja 1</p>
+
+                <input type="radio" name="1-radio" value="odg1">Odgovor1<br>
+                <input type="radio" name="1-radio" value="odg2">Odgovor2<br>
+                <input type="radio" name="1-radio" value="odg3">Odgovor3<br>
+                <input type="radio" name="1-radio" value="odg4">Odgovor4<br>
+            </div>
+            <div class="pitanje col-lg-8 col-md-8 col-sm-12">
+                <p class="pitanje-redni-broj">2.</p>
+                <p class="pitanje-tekst">Tekst pitanja 2</p>
+            </div>
+            <div class="pitanje col-lg-8 col-md-8 col-sm-12">
+                <p class="pitanje-redni-broj">3.</p>
+                <p class="pitanje-tekst">Tekst pitanja 3</p>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
