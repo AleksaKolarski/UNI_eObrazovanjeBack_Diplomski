@@ -1,12 +1,46 @@
 @mixin nesto {
-  .pitanje{
-    
-    .pitanje-redni-broj{
 
+  .class-header{
+    //margin-top: 10px;
+    //margin-bottom: 20px;
+    text-align: center;
+  }
+
+  #id-position{
+    font-size: 10px;
+    line-height: 10px;
+    width: 10px;
+    height: 10px;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .class-pitanje{
+     
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+
+    .class-pitanje-pitanje{
+
+      margin-bottom: 10px;
+
+      .class-pitanje-redni-broj{
+        display: inline;
+      }
+  
+      .class-pitanje-tekst{
+        display: inline;
+      }
     }
 
-    .pitanje-tekst{
-
+    .class-pitanje-odgovor{
+      display: inline-block;
+      margin-top: 0px;
+      margin-bottom: 6px;
     }
   }
 }
