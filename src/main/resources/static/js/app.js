@@ -1,40 +1,16 @@
 
-
-// demonstracija polozaja elemenata na stranici 
-var pitanje1;
-var pitanje2;
-var pitanje3;
-var p1;
-var p2;
-var p3;
-$(document).ready(function(e){
-    pitanje1 = $('#id-pitanje-1');
-    pitanje2 = $('#id-pitanje-2');
-    pitanje3 = $('#id-pitanje-3');
-    p1 = $('#id-p-1');
-    p2 = $('#id-p-2');
-    p3 = $('#id-p-3');
-
-    setInterval(function(){
-        p1.css('left', pitanje1.get(0).getBoundingClientRect().x);
-        p1.css('top', pitanje1.get(0).getBoundingClientRect().y);
-
-        p2.css('left', pitanje2.get(0).getBoundingClientRect().x);
-        p2.css('top', pitanje2.get(0).getBoundingClientRect().y);
-
-        p3.css('left', pitanje3.get(0).getBoundingClientRect().x);
-        p3.css('top', pitanje3.get(0).getBoundingClientRect().y);
-    },700);
-});
-
-
-
 var stompClient = null;
 
 var button_connect;
 var button_disconnect;
 var status_connected;
 var positionIndicator;
+var debug;
+
+var div_questions_parent;
+var div_questions = [];
+var question_active = -1;
+var questions = null;
 
 
 function setConnected(state){
@@ -68,11 +44,60 @@ function connect_successful_callback(frame){
             else{
                 //console.log(data.fpogx + ' ' + data.fpogy);
 
-                var fpogxFinalPosition = data.fpogx - (data.fpogx*window.devicePixelRatio - data.fpogx)/window.devicePixelRatio;
-                var fpogyFinalPosition = data.fpogy - (data.fpogy*window.devicePixelRatio - data.fpogy)/window.devicePixelRatio;
+                var fpogx = data.fpogx;
+                var fpogy = data.fpogy;
 
-                positionIndicator.css('left', fpogxFinalPosition - 5);
-                positionIndicator.css('top', fpogyFinalPosition - 5);
+
+                //fpogx -= window.screenX;
+                //fpogy -= window.screenY;
+                //fpogy -= 103;
+
+
+                var fpogxFinalPosition = fpogx - (fpogx*window.devicePixelRatio - fpogx)/window.devicePixelRatio;
+                var fpogyFinalPosition = fpogy - (fpogy*window.devicePixelRatio - fpogy)/window.devicePixelRatio;
+
+                if(debug.is(':checked')){
+                    positionIndicator.css('left', fpogxFinalPosition - 5);
+                    positionIndicator.css('top', fpogyFinalPosition - 5);
+                }
+                else{
+                    positionIndicator.css('left', -100);
+                    positionIndicator.css('top', -100);
+                }
+
+
+                if(questions != null){
+                    var is_any_question_active = false;
+                    div_questions.forEach(div_question => {
+                        var cr = div_question.get(0).getBoundingClientRect();
+                        if(fpogxFinalPosition >= cr.left && fpogxFinalPosition <= cr.right && fpogyFinalPosition >= cr.top && fpogyFinalPosition <= cr.bottom){
+                            is_any_question_active = true;
+                            if(question_active != div_question.question_id){
+                                console.log('\nleft question: ' + question_active);
+                                console.log('entered question: ' + div_question.question_id);
+                                question_active = div_question.question_id;
+                            }
+
+                            if(debug.is(':checked')){
+                                div_question.css('border-color', '#F00');
+                            }
+                        }
+                        else{
+                            if(debug.is(':checked')){
+                                div_question.css('border-color', 'transparent');
+                            }
+                        }
+                    });
+                    if(is_any_question_active == false){
+                        if(question_active != -1){
+                            console.log('\nleft question: ' + question_active);
+                            console.log('entered question: -1');
+                        }
+                        question_active = -1;
+                    }
+                }
+
+                //console.log('window ' + window.screenX + ' ' + window.screenTop);
             }
         }
     });
@@ -126,14 +151,49 @@ function disconnect(){
 
 
 
+
+
 $(document).ready(function(e){
 
     button_connect = $('#id-button-connect');
     button_disconnect = $('#id-button-disconnect');
     status_connected = $('#id-status-connected');
     positionIndicator = $('#id-position');
+    debug = $('#id-debug');
 
     button_connect.click(connect);
     button_disconnect.click(disconnect);
+
+    div_questions_parent = $('#id-div-pitanja');
+
+    $.ajax({
+        method: 'GET',
+        url: '/questions/all',
+        success: function(data, status, xhr){
+            questions = data;
+            var html = '';
+            var i = 1;
+            questions.forEach(question => {
+                html += '<div id="id-pitanje-'+ question.id +'" class="class-pitanje col-lg-8 col-md-8 col-sm-12">' + 
+                            '<div class="class-pitanje-pitanje">' + 
+                                '<p class="class-pitanje-redni-broj">'+ i +'. </p>' + 
+                                '<p class="class-pitanje-tekst">'+ question.body +'</p>' + 
+                            '</div>';
+                question.answers.forEach(answer => {
+                    html += '<input type="radio" name="'+ question.id +'-radio" value="'+ answer.id +'"><p class="class-pitanje-odgovor">'+ answer.body +'</p><br>';
+                });
+                html += '</div>';
+                i++;
+            });
+            div_questions_parent.html(html);
+            questions.forEach(question => {
+                var tmp = $('#id-pitanje-' + question.id);
+                tmp['question_id'] = question.id;
+                div_questions.push(tmp);
+            });
+        }
+    });
+
+
 });
 

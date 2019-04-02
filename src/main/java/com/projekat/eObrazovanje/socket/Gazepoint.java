@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -92,14 +93,14 @@ public class Gazepoint {
 	    			endindex = line.indexOf("\"", startindex);
 	    			fpogy = Double.parseDouble(line.substring(startindex, endindex));
 	    			
-	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, fpogx, fpogy));
+	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, fpogx, fpogy));
 	    			
 	    			
 	    			//long millis=System.currentTimeMillis();
 	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (millis/10.0) % 1920, (millis/10.0) % 1080));
 	    			
-	    			//Point p = d.getCursorLocation();
-	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x, (double)p.y));
+	    			Point p = d.getCursorLocation();
+	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x, (double)p.y));
 	    			
 	    			//System.out.println("sending " + p.x + " " + p.y);
 	    		}

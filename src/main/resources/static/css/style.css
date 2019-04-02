@@ -2,6 +2,24 @@ input {
   box-sizing: border-box;
 }
 
+#id-div-util {
+  position: fixed;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+}
+#id-div-util input[type=button] {
+  font-size: 0.7em;
+  padding: 2px;
+}
+#id-div-util p {
+  margin: 0px;
+  display: inline;
+}
+#id-div-util * {
+  vertical-align: middle;
+}
+
 .class-header {
   text-align: center;
 }
@@ -16,12 +34,15 @@ input {
 }
 
 .class-pitanje {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-top: 30px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top: 50px;
   padding-bottom: 30px;
-  padding-left: 30px;
-  padding-right: 30px;
+  padding-left: 50px;
+  padding-right: 50px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: transparent;
 }
 .class-pitanje .class-pitanje-pitanje {
   margin-bottom: 10px;
