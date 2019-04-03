@@ -68,6 +68,8 @@ public class Gazepoint {
     
     public void startStreamParse() {
     	Display d = new Display();
+    	int monitorWidth = d.getPrimaryMonitor().getBounds().width;
+    	int monitorHeight = d.getPrimaryMonitor().getBounds().height;
     	
     	out.print("<SET ID=\"ENABLE_SEND_TIME\" STATE=\"1\" />\r\n");
     	out.print("<SET ID=\"ENABLE_SEND_POG_FIX\" STATE=\"1\" />\r\n");
@@ -100,7 +102,7 @@ public class Gazepoint {
 	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (millis/10.0) % 1920, (millis/10.0) % 1080));
 	    			
 	    			Point p = d.getCursorLocation();
-	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x, (double)p.y));
+	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x/monitorWidth, (double)p.y/monitorHeight));
 	    			
 	    			//System.out.println("sending " + p.x + " " + p.y);
 	    		}

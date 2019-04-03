@@ -41,8 +41,8 @@
      
     margin-top: 5px;
     margin-bottom: 5px;
-    padding-top: 50px;
-    padding-bottom: 30px;
+    padding-top: 20px;
+    //padding-bottom: 10px;
     padding-left: 50px;
     padding-right: 50px;
 
@@ -50,9 +50,14 @@
     border-width: 2px;
     border-color: transparent;
 
+    .row{
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
     .class-pitanje-pitanje{
 
-      margin-bottom: 10px;
+      //margin-bottom: 10px;
 
       .class-pitanje-redni-broj{
         display: inline;
@@ -62,11 +67,27 @@
         display: inline;
       }
     }
+    
+    .div-pitanje-odgovor {
 
-    .class-pitanje-odgovor{
-      display: inline-block;
-      margin-top: 0px;
-      margin-bottom: 6px;
+      padding-top: 25px;
+      padding-bottom: 25px;
+
+      border-style: solid;
+      border-width: 2px;
+      border-color: transparent;
+
+      input{
+        margin-top: 0px;
+        vertical-align: middle;
+      }
+
+      .class-pitanje-odgovor{
+        display: inline-block;
+        margin: 0px 0px 0px 6px;
+        //margin-bottom: 6px;
+        vertical-align: middle;
+      }
     }
   }
 }
