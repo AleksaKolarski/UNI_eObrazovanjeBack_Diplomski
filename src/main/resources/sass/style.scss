@@ -1,7 +1,9 @@
-@import "nesto";
+@import "login";
+@import "test";
 
 input{
   box-sizing: border-box;
 }
 
-@include nesto;
+@include login;
+@include test;

@@ -2,29 +2,31 @@ input {
   box-sizing: border-box;
 }
 
-#id-div-util {
+#id-body-login {
+  text-align: center;
+}
+
+#id-body-test #id-div-util {
   position: fixed;
   top: 6px;
   left: 6px;
   z-index: 1;
 }
-#id-div-util input[type=button] {
+#id-body-test #id-div-util input[type=button] {
   font-size: 0.7em;
   padding: 2px;
 }
-#id-div-util p {
+#id-body-test #id-div-util p {
   margin: 0px;
   display: inline;
 }
-#id-div-util * {
+#id-body-test #id-div-util * {
   vertical-align: middle;
 }
-
-.class-header {
+#id-body-test .class-header {
   text-align: center;
 }
-
-#id-position {
+#id-body-test #id-position {
   font-size: 10px;
   line-height: 10px;
   width: 10px;
@@ -32,8 +34,7 @@ input {
   vertical-align: middle;
   text-align: center;
 }
-
-.class-pitanje {
+#id-body-test .class-pitanje {
   margin-top: 5px;
   margin-bottom: 5px;
   padding-top: 20px;
@@ -43,31 +44,38 @@ input {
   border-width: 2px;
   border-color: transparent;
 }
-.class-pitanje .row {
+#id-body-test .class-pitanje .row {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.class-pitanje .class-pitanje-pitanje .class-pitanje-redni-broj {
+#id-body-test .class-pitanje .class-pitanje-pitanje .class-pitanje-redni-broj {
   display: inline;
 }
-.class-pitanje .class-pitanje-pitanje .class-pitanje-tekst {
+#id-body-test .class-pitanje .class-pitanje-pitanje .class-pitanje-tekst {
   display: inline;
 }
-.class-pitanje .div-pitanje-odgovor {
+#id-body-test .class-pitanje .div-pitanje-odgovor {
   padding-top: 25px;
   padding-bottom: 25px;
   border-style: solid;
   border-width: 2px;
   border-color: transparent;
 }
-.class-pitanje .div-pitanje-odgovor input {
+#id-body-test .class-pitanje .div-pitanje-odgovor input {
   margin-top: 0px;
   vertical-align: middle;
 }
-.class-pitanje .div-pitanje-odgovor .class-pitanje-odgovor {
+#id-body-test .class-pitanje .div-pitanje-odgovor .class-pitanje-odgovor {
   display: inline-block;
   margin: 0px 0px 0px 6px;
   vertical-align: middle;
+}
+#id-body-test #id-div-kraj {
+  text-align: center;
+}
+#id-body-test #id-div-kraj #id-button-kraj {
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 /*# sourceMappingURL=style.css.map */

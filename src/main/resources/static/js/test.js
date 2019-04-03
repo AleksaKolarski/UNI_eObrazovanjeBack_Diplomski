@@ -11,7 +11,9 @@ var div_questions_parent;
 var div_questions = { activeQuestion: -1, activeAnswer: -1, list: [] };
 var questions = null;
 
-
+var result = { answers: [], log: [] };
+var button_kraj;
+var ime;
 
 function setConnected(state) {
     status_connected.css('color', ((state == true) ? 'green' : 'red'));
@@ -63,7 +65,6 @@ function connect_successful_callback(frame) {
                     positionIndicator.css('top', -100);
                 }
 
-
                 if (questions != null) {
                     var is_any_question_active = false;
                     var is_any_answer_active = false;
@@ -71,28 +72,21 @@ function connect_successful_callback(frame) {
                         var cr = div_question.get(0).getBoundingClientRect();
                         if (fpogxFinalPosition >= cr.left && fpogxFinalPosition <= cr.right && fpogyFinalPosition >= cr.top && fpogyFinalPosition <= cr.bottom) {
                             is_any_question_active = true;
-                            if (div_questions.activeQuestion != div_question.question_id) {
+                            if (div_questions.activeQuestion != div_question.id) {
                                 console.log('\nleft question: ' + div_questions.activeQuestion);
-                                console.log('entered question: ' + div_question.question_id);
-                                div_questions.activeQuestion = div_question.question_id;
+                                console.log('entered question: ' + div_question.id);
+                                result.log.push({ type: 'question', before: div_questions.activeQuestion, after: div_question.id, time: new Date() });
+                                if (debug.is(':checked')) {
+                                    $('#id-pitanje-' + div_questions.activeQuestion).css('border-color', 'transparent');
+                                }
+                                div_questions.activeQuestion = div_question.id;
                             }
-
                             if (debug.is(':checked')) {
                                 div_question.css('border-color', '#F00');
                             }
                         }
-                        else {
-                            if (debug.is(':checked')) {
-                                div_question.css('border-color', 'transparent');
-                            }
-                        }
 
                         // odgovori
-
-                        // PROBLEM kad se naglo izadje iz pitanja onda odgovor ostane selektovan. Razlog za to je upravo pozicija ovog koda ispod.
-                        // Kod ne sme da se nalazi u gornjoj proveri pozicije misa u pitanju jer kad se izadje iz odgovora vise se ne proveravaju njegova pitanja;
-
-                        
                         div_question.answers.forEach(answer => {
                             var answerCR = answer.get(0).getBoundingClientRect();
                             if (fpogxFinalPosition >= answerCR.left && fpogxFinalPosition <= answerCR.right && fpogyFinalPosition >= answerCR.top && fpogyFinalPosition <= answerCR.bottom) {
@@ -101,16 +95,14 @@ function connect_successful_callback(frame) {
                                 if (div_questions.activeAnswer != answer.id) {
                                     console.log('\nleft answer: ' + div_questions.activeAnswer);
                                     console.log('entered answer: ' + answer.id);
+                                    result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: answer.id, time: new Date() });
+                                    if (debug.is(':checked')) {
+                                        $('#id-odgovor-' + div_questions.activeAnswer).css('border-color', 'transparent');
+                                    }
                                     div_questions.activeAnswer = answer.id;
                                 }
-
                                 if (debug.is(':checked')) {
                                     answer.css('border-color', '#F00');
-                                }
-                            }
-                            else {
-                                if (debug.is(':checked')) {
-                                    answer.css('border-color', 'transparent');
                                 }
                             }
                         });
@@ -119,18 +111,24 @@ function connect_successful_callback(frame) {
                         if (div_questions.activeQuestion != -1) {
                             console.log('\nleft question: ' + div_questions.activeQuestion);
                             console.log('entered question: -1');
+                            result.log.push({ type: 'question', before: div_questions.activeQuestion, after: -1, time: new Date() });
+                            if (debug.is(':checked')) {
+                                $('#id-pitanje-' + div_questions.activeQuestion).css('border-color', 'transparent');
+                            }
+                            div_questions.activeQuestion = -1;
                         }
-                        div_questions.activeQuestion = -1;
                     }
                     if (is_any_answer_active == false) {
                         if (div_questions.activeAnswer != -1) {
                             console.log('\nleft answer: ' + div_questions.activeAnswer);
                             console.log('entered answer: -1');
+                            result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: -1, time: new Date() });
+                            if (debug.is(':checked')) {
+                                $('#id-odgovor-' + div_questions.activeAnswer).css('border-color', 'transparent');
+                            }
                         }
                         div_questions.activeAnswer = -1;
                     }
-
-
                 }
             }
         }
@@ -185,8 +183,6 @@ function disconnect() {
 
 
 
-
-
 $(document).ready(function (e) {
 
     button_connect = $('#id-button-connect');
@@ -200,6 +196,15 @@ $(document).ready(function (e) {
 
     div_questions_parent = $('#id-div-pitanja');
 
+    button_kraj = $('#id-button-kraj');
+
+    ime = new URLSearchParams(window.location.search).get('ime');
+    if(ime == null || ime == ''){
+        window.location.href = '/login.html';
+    }
+    console.log(ime);
+
+
     $.ajax({
         method: 'GET',
         url: '/questions/all',
@@ -209,54 +214,70 @@ $(document).ready(function (e) {
             var i = 1;
             questions.forEach(question => {
                 html += '<div id="id-pitanje-' + question.id + '" class="class-pitanje col-lg-8 col-md-8 col-sm-12">' +
-                    '<div class="class-pitanje-pitanje">' +
-                    '<p class="class-pitanje-redni-broj">' + i + '. </p>' +
-                    '<p class="class-pitanje-tekst">' + question.body + '</p>' +
-                    '</div>';
-
-                //question.answers.forEach(answer => {
-                //html += '<input type="radio" name="'+ question.id +'-radio" value="'+ answer.id +'"><p class="class-pitanje-odgovor">'+ answer.body +'</p><br>';
-                //});
-
-                html += '<div class="row">' +
-                    '<div id="id-odgovor-' + question.answers[0].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
-                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[0].id + '"><p class="class-pitanje-odgovor">' + question.answers[0].body + '</p><br>' +
-                    '</div>' +
-                    '<div id="id-odgovor-' + question.answers[1].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
-                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[1].id + '"><p class="class-pitanje-odgovor">' + question.answers[1].body + '</p><br>' +
-                    '</div>' +
-                    '</div>' +
-                    '<div class="row">' +
-                    '<div id="id-odgovor-' + question.answers[2].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
-                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[2].id + '"><p class="class-pitanje-odgovor">' + question.answers[2].body + '</p><br>' +
-                    '</div>' +
-                    '<div id="id-odgovor-' + question.answers[3].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
-                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[3].id + '"><p class="class-pitanje-odgovor">' + question.answers[3].body + '</p><br>' +
-                    '</div>' +
-                    '</div>';
-
-
-                html += '</div>';
+                            '<div class="class-pitanje-pitanje">' +
+                                '<p class="class-pitanje-redni-broj">' + i + '. </p>' +
+                                '<p class="class-pitanje-tekst">' + question.body + '</p>' +
+                            '</div>' + 
+                            '<div class="row">' +
+                                '<div id="id-odgovor-' + question.answers[0].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
+                                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[0].id + '"><p class="class-pitanje-odgovor">' + question.answers[0].body + '</p><br>' +
+                                '</div>' +
+                                '<div id="id-odgovor-' + question.answers[1].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
+                                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[1].id + '"><p class="class-pitanje-odgovor">' + question.answers[1].body + '</p><br>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="row">' +
+                                '<div id="id-odgovor-' + question.answers[2].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
+                                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[2].id + '"><p class="class-pitanje-odgovor">' + question.answers[2].body + '</p><br>' +
+                            '</div>' +
+                                '<div id="id-odgovor-' + question.answers[3].id + '" class="div-pitanje-odgovor col-5 offset-1">' +
+                                    '<input type="radio" name="' + question.id + '-radio" value="' + question.answers[3].id + '"><p class="class-pitanje-odgovor">' + question.answers[3].body + '</p><br>' +
+                                '</div>' +
+                            '</div>' + 
+                        '</div>';
                 i++;
             });
             div_questions_parent.html(html);
             questions.forEach(question => {
                 var tmp = $('#id-pitanje-' + question.id);
-                tmp['question_id'] = question.id;
+                tmp.id = question.id;
                 div_questions.list.push(tmp);
 
-                tmp['answers'] = [];
-
+                tmp.answers = [];
                 for (var i = 0; i < 4; i++) {
                     var tmpAnswer = $('#id-odgovor-' + question.answers[i].id);
-                    tmpAnswer['id'] = question.answers[i].id;
+                    tmpAnswer.id = question.answers[i].id;
                     tmp.answers.push(tmpAnswer);
                 }
+            });
 
+            button_kraj.click(function(e){
+                result.answers = [];
+                var all_answered = true;
+                questions.forEach(question => {
+                    var resultAnswer = $('input[name='+question.id+'-radio]:checked').val();
+                    if(resultAnswer == null){
+                        all_answered = false;
+                    }
+                    else{
+                        result.answers.push({ questionId: question.id, answerId: resultAnswer });
+                    }
+                });
+                if(all_answered == false){
+                    console.log('Morate odgovoriti na sva pitanja');
+                    return;
+                }
+                console.log(result);
+                $.ajax({
+                    method: 'POST', 
+                    url: '/questions/submit/' + ime, 
+                    contentType: 'application/json', 
+                    data: JSON.stringify(result), 
+                    success: function(data, status, xhr){
+                        window.location.href = '/login.html';
+                    }
+                });
             });
         }
     });
-
-
 });
-
