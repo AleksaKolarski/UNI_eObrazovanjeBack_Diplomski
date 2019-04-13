@@ -1,6 +1,7 @@
 package com.projekat.eObrazovanje.dto;
 
 public class QuestionAnswerPairDTO {
+	
 	private Integer questionId;
 	private Integer answerId;
 	

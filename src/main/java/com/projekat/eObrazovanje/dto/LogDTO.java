@@ -3,6 +3,7 @@ package com.projekat.eObrazovanje.dto;
 import java.util.Date;
 
 public class LogDTO {
+	
 	private String type;
 	private Integer before;
 	private Integer after;
