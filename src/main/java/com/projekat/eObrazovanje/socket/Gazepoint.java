@@ -24,22 +24,24 @@ public class Gazepoint {
     private PrintWriter out;
     private BufferedReader in;
     
-    private ClientThread thread;
+    private ClientThread thread = new ClientThread();
     
     
     
     @Autowired
     private SimpMessagingTemplate template;
  
-    public void startConnection(String ip, int port) throws UnknownHostException, IOException {    	
-        clientSocket = new Socket(ip, port);
-        out = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    public void startConnection(String ip, int port) throws UnknownHostException, IOException {
+    	if(!thread.isAlive()) {
+    		clientSocket = new Socket(ip, port);
+    		out = new PrintWriter(clientSocket.getOutputStream(), true);
+    		in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         
-        thread = new ClientThread();
-        thread.start();
+    		thread = new ClientThread();
+        	thread.start();
         
-        System.out.println("gazepoint connection started");
+        	System.out.println("gazepoint connection started");
+    	}
     }
  
  
