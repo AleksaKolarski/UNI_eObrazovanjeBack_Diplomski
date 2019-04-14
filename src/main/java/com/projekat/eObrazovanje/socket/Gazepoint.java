@@ -48,7 +48,7 @@ public class Gazepoint {
     	
     	template.convertAndSend("/topic/gazepoint-data", new Eye(false, 0.0, 0.0));
     	
-    	if(thread != null) {
+    	if(thread != null) {	
         	thread.stop();
         }
     	
@@ -71,7 +71,7 @@ public class Gazepoint {
     	int monitorWidth = d.getPrimaryMonitor().getBounds().width;
     	int monitorHeight = d.getPrimaryMonitor().getBounds().height;
     	
-    	out.print("<SET ID=\"ENABLE_SEND_TIME\" STATE=\"1\" />\r\n");
+    	//out.print("<SET ID=\"ENABLE_SEND_TIME\" STATE=\"1\" />\r\n");
     	out.print("<SET ID=\"ENABLE_SEND_POG_FIX\" STATE=\"1\" />\r\n");
     	out.print("<SET ID=\"ENABLE_SEND_CURSOR\" STATE=\"1\" />\r\n");
     	out.print("<SET ID=\"ENABLE_SEND_DATA\" STATE=\"1\" />\r\n");

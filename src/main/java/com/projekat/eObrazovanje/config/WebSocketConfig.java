@@ -50,7 +50,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	}
 	
 	
-	
 	private HandshakeInterceptor getInterceptor() {
         return new HandshakeInterceptor(){
 

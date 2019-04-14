@@ -207,7 +207,7 @@ $(document).ready(function (e) {
 
     $.ajax({
         method: 'GET',
-        url: '/questions/all',
+        url: '/api/questions',
         success: function (data, status, xhr) {
             questions = data;
             var html = '';
@@ -270,7 +270,7 @@ $(document).ready(function (e) {
                 console.log(result);
                 $.ajax({
                     method: 'POST', 
-                    url: '/questions/submit/' + ime, 
+                    url: '/api/results/' + ime, 
                     contentType: 'application/json', 
                     data: JSON.stringify(result), 
                     success: function(data, status, xhr){

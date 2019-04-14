@@ -33,9 +33,18 @@ public class Log {
 	@JoinColumn(name = "result_id", referencedColumnName = "id", unique = false, nullable = false)
 	private Result result;
 	
+	
 	public Log() {}
 
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -66,5 +75,13 @@ public class Log {
 
 	public void setTime(Date time) {
 		this.time = time;
+	}
+	
+	public Result getResult() {
+		return result;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
 	}
 }

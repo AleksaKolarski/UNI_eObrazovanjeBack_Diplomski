@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 @Entity
 public class Result {
 	
@@ -17,9 +20,14 @@ public class Result {
 	@Column(name = "id", unique = true, nullable = false)
 	private Integer id;
 	
+	@Column(name = "name", unique = false, nullable = false, length = 30)
+	private String name;
+	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "result")
 	private List<QuestionAnswerPair> answers;
 	
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "result")
 	private List<Log> log;
 	
@@ -33,6 +41,14 @@ public class Result {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<QuestionAnswerPair> getAnswers() {

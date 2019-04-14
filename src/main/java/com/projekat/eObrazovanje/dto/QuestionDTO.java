@@ -3,7 +3,6 @@ package com.projekat.eObrazovanje.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.projekat.eObrazovanje.model.Answer;
 import com.projekat.eObrazovanje.model.Question;
 
 public class QuestionDTO {
@@ -17,20 +16,17 @@ public class QuestionDTO {
 	
 	public QuestionDTO(Question q) {
 		this.id = q.getId();
-		this.body = q.getBody();
-		this.answers = new ArrayList<>();
-		for(Answer a: q.getAnswers()) {
-			this.answers.add(new AnswerDTO(a));
-		}
+		this.body = q.getBody();		
+		this.answers = AnswerDTO.listToListDTO(q.getAnswers());
 	}
 	
 	
-	public static List<QuestionDTO> convertEntityList(List<Question> qList){
-		List<QuestionDTO> qListDTO = new ArrayList<>();
-		for(Question q: qList) {
-			qListDTO.add(new QuestionDTO(q));
+	public static List<QuestionDTO> listToListDTO(List<Question> questions){
+		List<QuestionDTO> questionsDTO = new ArrayList<>();
+		for(Question q: questions) {
+			questionsDTO.add(new QuestionDTO(q));
 		}
-		return qListDTO;
+		return questionsDTO;
 	}
 
 

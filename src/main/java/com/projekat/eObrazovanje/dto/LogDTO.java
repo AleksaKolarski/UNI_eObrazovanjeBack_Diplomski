@@ -1,9 +1,14 @@
 package com.projekat.eObrazovanje.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.projekat.eObrazovanje.model.Log;
 
 public class LogDTO {
 	
+	private Integer id;
 	private String type;
 	private Integer before;
 	private Integer after;
@@ -11,8 +16,33 @@ public class LogDTO {
 	
 	
 	public LogDTO() {}
+	
+	public LogDTO(Log log) {
+		this.id = log.getId();
+		this.type = log.getType();
+		this.before = log.getBefore();
+		this.after = log.getAfter();
+		this.time = log.getTime();
+	}
+	
+	
+	public static List<LogDTO> listToListDTO(List<Log> logs){
+		List<LogDTO> logsDTO = new ArrayList<LogDTO>();
+		for(Log log: logs) {
+			logsDTO.add(new LogDTO(log));
+		}
+		return logsDTO;
+	}
 
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getType() {
 		return type;
 	}

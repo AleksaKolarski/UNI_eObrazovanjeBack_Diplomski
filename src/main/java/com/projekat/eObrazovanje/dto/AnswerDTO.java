@@ -1,5 +1,8 @@
 package com.projekat.eObrazovanje.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.projekat.eObrazovanje.model.Answer;
 
 public class AnswerDTO {
@@ -8,12 +11,22 @@ public class AnswerDTO {
 	private String body;
 	private Boolean correct;		
 	
+	
 	public AnswerDTO() {}
 	
 	public AnswerDTO(Answer a) {
 		this.id = a.getId();
 		this.body = a.getBody();
 		this.correct = a.getCorrect();
+	}
+	
+	
+	public static List<AnswerDTO> listToListDTO(List<Answer> answers){
+		List<AnswerDTO> answersDTO = new ArrayList<>();
+		for(Answer a: answers) {
+			answersDTO.add(new AnswerDTO(a));
+		}
+		return answersDTO;
 	}
 
 	
