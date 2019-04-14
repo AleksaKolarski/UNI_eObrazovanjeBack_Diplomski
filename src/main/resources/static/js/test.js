@@ -140,7 +140,6 @@ function connect_unsuccessful_callback(error) {
     console.log('Connection unsuccessful');
     if (error !== null) {
         console.log('error: ' + error);
-        $('#id-div-util').append(error);
     }
     setConnected(false);
     stompClient = null;
