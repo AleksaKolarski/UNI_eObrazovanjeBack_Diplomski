@@ -28,111 +28,121 @@ function setConnected(state) {
     }
 }
 
+function draw_debug_point(x, y){
+    if (debug.is(':checked')) {
+        positionIndicator.css('left', x - 5);
+        positionIndicator.css('top', y - 5);
+    }
+    else {
+        positionIndicator.css('left', -100);
+        positionIndicator.css('top', -100);
+    }
+}
+
+function set_element_border(element, active){
+    if(debug.is(':checked')){
+        if(active == true){
+            element.css('border-color', '#F00');
+        }
+        else{
+            element.css('border-color', 'transparent');
+        }
+    }
+}
+
+function find_target_elements(x, y){
+    var is_any_question_active = false;
+    var is_any_answer_active = false;
+
+    // pitanja
+    div_questions.list.forEach(div_question => {
+        var cr = div_question.get(0).getBoundingClientRect();
+        if (x >= cr.left && x <= cr.right && y >= cr.top && y <= cr.bottom) {
+            is_any_question_active = true;
+            if (div_questions.activeQuestion != div_question.id) {
+                console.log('\nleft question: ' + div_questions.activeQuestion);
+                console.log('entered question: ' + div_question.id);
+                result.log.push({ type: 'question', before: div_questions.activeQuestion, after: div_question.id, time: new Date() });
+                set_element_border($('#id-pitanje-' + div_questions.activeQuestion), false);
+                div_questions.activeQuestion = div_question.id;
+            }
+            set_element_border(div_question, true);
+        }
+
+        // odgovori
+        div_question.answers.forEach(answer => {
+            var answerCR = answer.get(0).getBoundingClientRect();
+            if (x >= answerCR.left && x <= answerCR.right && y >= answerCR.top && y <= answerCR.bottom) {
+                is_any_answer_active = true;
+                if (div_questions.activeAnswer != answer.id) {
+                    console.log('\nleft answer: ' + div_questions.activeAnswer);
+                    console.log('entered answer: ' + answer.id);
+                    result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: answer.id, time: new Date() });
+                    set_element_border($('#id-odgovor-' + div_questions.activeAnswer), false);
+                    div_questions.activeAnswer = answer.id;
+                }
+                set_element_border(answer, true);
+            }
+        });
+    });
+    if (is_any_question_active == false) {
+        if (div_questions.activeQuestion != -1) {
+            console.log('\nleft question: ' + div_questions.activeQuestion);
+            console.log('entered question: -1');
+            result.log.push({ type: 'question', before: div_questions.activeQuestion, after: -1, time: new Date() });
+            set_element_border($('#id-pitanje-' + div_questions.activeQuestion), false);
+            div_questions.activeQuestion = -1;
+        }
+    }
+    if (is_any_answer_active == false) {
+        if (div_questions.activeAnswer != -1) {
+            console.log('\nleft answer: ' + div_questions.activeAnswer);
+            console.log('entered answer: -1');
+            result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: -1, time: new Date() });
+            set_element_border($('#id-odgovor-' + div_questions.activeAnswer), false);
+        }
+        div_questions.activeAnswer = -1;
+    }
+}
+
+function handle_gazepoint_data(message){
+    if (message.body) // inace je prazno
+    {
+        var data = JSON.parse(message.body);
+
+        // proveriti da li je flag za zivu konekciju sa gazepoint serverom
+        // ako nije diskonektovati se
+        if (data.connectionActive == false) {
+            disconnect();
+        }
+        else {
+            //console.log(data.fpogx + ' ' + data.fpogy);
+
+            var fpogx = data.fpogx * window.screen.width;
+            var fpogy = data.fpogy * window.screen.height;
+
+            //fpogx -= window.screenX;
+            //fpogy -= window.screenY;
+            //fpogy -= 103;
+
+            var fpogxFinalPosition = fpogx - (fpogx * window.devicePixelRatio - fpogx) / window.devicePixelRatio;
+            var fpogyFinalPosition = fpogy - (fpogy * window.devicePixelRatio - fpogy) / window.devicePixelRatio;
+
+            draw_debug_point(fpogxFinalPosition, fpogyFinalPosition);
+
+            if (questions != null) {
+                find_target_elements(fpogxFinalPosition, fpogyFinalPosition);
+            }
+        }
+    }
+}
+
 // CONNECT
 function connect_successful_callback(frame) {
     button_connect.removeAttr('disabled');
     console.log('Connection successful');
     setConnected(true);
-    stompClient.subscribe('/topic/gazepoint-data', function (message) {
-        if (message.body) // inace je prazno
-        {
-            var data = JSON.parse(message.body);
-
-            // proveriti da li je flag za zivu konekciju sa gazepoint serverom
-            // ako nije diskonektovati se
-            if (data.connectionActive == false) {
-                disconnect();
-            }
-            else {
-                //console.log(data.fpogx + ' ' + data.fpogy);
-
-                var fpogx = data.fpogx * window.screen.width;
-                var fpogy = data.fpogy * window.screen.height;
-
-                //fpogx -= window.screenX;
-                //fpogy -= window.screenY;
-                //fpogy -= 103;
-
-                var fpogxFinalPosition = fpogx - (fpogx * window.devicePixelRatio - fpogx) / window.devicePixelRatio;
-                var fpogyFinalPosition = fpogy - (fpogy * window.devicePixelRatio - fpogy) / window.devicePixelRatio;
-
-                if (debug.is(':checked')) {
-                    positionIndicator.css('left', fpogxFinalPosition - 5);
-                    positionIndicator.css('top', fpogyFinalPosition - 5);
-                }
-                else {
-                    positionIndicator.css('left', -100);
-                    positionIndicator.css('top', -100);
-                }
-
-                if (questions != null) {
-                    var is_any_question_active = false;
-                    var is_any_answer_active = false;
-                    div_questions.list.forEach(div_question => {
-                        var cr = div_question.get(0).getBoundingClientRect();
-                        if (fpogxFinalPosition >= cr.left && fpogxFinalPosition <= cr.right && fpogyFinalPosition >= cr.top && fpogyFinalPosition <= cr.bottom) {
-                            is_any_question_active = true;
-                            if (div_questions.activeQuestion != div_question.id) {
-                                console.log('\nleft question: ' + div_questions.activeQuestion);
-                                console.log('entered question: ' + div_question.id);
-                                result.log.push({ type: 'question', before: div_questions.activeQuestion, after: div_question.id, time: new Date() });
-                                if (debug.is(':checked')) {
-                                    $('#id-pitanje-' + div_questions.activeQuestion).css('border-color', 'transparent');
-                                }
-                                div_questions.activeQuestion = div_question.id;
-                            }
-                            if (debug.is(':checked')) {
-                                div_question.css('border-color', '#F00');
-                            }
-                        }
-
-                        // odgovori
-                        div_question.answers.forEach(answer => {
-                            var answerCR = answer.get(0).getBoundingClientRect();
-                            if (fpogxFinalPosition >= answerCR.left && fpogxFinalPosition <= answerCR.right && fpogyFinalPosition >= answerCR.top && fpogyFinalPosition <= answerCR.bottom) {
-                                is_any_answer_active = true;
-
-                                if (div_questions.activeAnswer != answer.id) {
-                                    console.log('\nleft answer: ' + div_questions.activeAnswer);
-                                    console.log('entered answer: ' + answer.id);
-                                    result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: answer.id, time: new Date() });
-                                    if (debug.is(':checked')) {
-                                        $('#id-odgovor-' + div_questions.activeAnswer).css('border-color', 'transparent');
-                                    }
-                                    div_questions.activeAnswer = answer.id;
-                                }
-                                if (debug.is(':checked')) {
-                                    answer.css('border-color', '#F00');
-                                }
-                            }
-                        });
-                    });
-                    if (is_any_question_active == false) {
-                        if (div_questions.activeQuestion != -1) {
-                            console.log('\nleft question: ' + div_questions.activeQuestion);
-                            console.log('entered question: -1');
-                            result.log.push({ type: 'question', before: div_questions.activeQuestion, after: -1, time: new Date() });
-                            if (debug.is(':checked')) {
-                                $('#id-pitanje-' + div_questions.activeQuestion).css('border-color', 'transparent');
-                            }
-                            div_questions.activeQuestion = -1;
-                        }
-                    }
-                    if (is_any_answer_active == false) {
-                        if (div_questions.activeAnswer != -1) {
-                            console.log('\nleft answer: ' + div_questions.activeAnswer);
-                            console.log('entered answer: -1');
-                            result.log.push({ type: 'answer', before: div_questions.activeAnswer, after: -1, time: new Date() });
-                            if (debug.is(':checked')) {
-                                $('#id-odgovor-' + div_questions.activeAnswer).css('border-color', 'transparent');
-                            }
-                        }
-                        div_questions.activeAnswer = -1;
-                    }
-                }
-            }
-        }
-    });
+    stompClient.subscribe('/topic/gazepoint-data', handle_gazepoint_data);
 }
 
 function connect_unsuccessful_callback(error) {

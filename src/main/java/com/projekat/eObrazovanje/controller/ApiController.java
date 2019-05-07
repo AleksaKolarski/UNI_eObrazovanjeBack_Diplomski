@@ -52,7 +52,16 @@ public class ApiController {
 	@GetMapping("/questions")
 	public ResponseEntity<List<QuestionDTO>> getQuestions(){
 		
-		List<Question> questions = qService.findRandom(10);
+		//List<Question> questions = qService.findRandom(10);
+		List<Question> questions = qService.findRandomBetter(10);
+		
+		/*
+		System.out.println("\n\n");
+		for(Question  q: questions) {
+			System.out.println(q.getId());
+		}
+		*/
+		
 		List<QuestionDTO> questionsDTO = QuestionDTO.listToListDTO(questions);
 		
 		return new ResponseEntity<>(questionsDTO, HttpStatus.OK);

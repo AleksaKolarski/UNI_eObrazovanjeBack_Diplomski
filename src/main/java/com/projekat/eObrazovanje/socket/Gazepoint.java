@@ -26,8 +26,6 @@ public class Gazepoint {
     
     private ClientThread thread = new ClientThread();
     
-    
-    
     @Autowired
     private SimpMessagingTemplate template;
  
