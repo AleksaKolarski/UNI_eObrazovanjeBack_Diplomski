@@ -46,7 +46,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 		// ako koristimo SockJS
 		//registry.addEndpoint("/websocket-endpoint").withSockJS().setClientLibraryUrl("/lib/sockjs.min.js").setInterceptors(getInterceptor()).setSessionCookieNeeded(false);
 		
-		registry.addEndpoint("/websocket-endpoint").addInterceptors(getInterceptor());
+		registry.addEndpoint("/websocket-endpoint").setAllowedOrigins("*").addInterceptors(getInterceptor());
 	}
 	
 	
