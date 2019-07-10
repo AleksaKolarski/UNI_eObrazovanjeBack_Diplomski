@@ -35,20 +35,19 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
 
 	@Override
-	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableSimpleBroker("/topic");
-		registry.setApplicationDestinationPrefixes("/app");
-	}
-	
-	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		
 		// ako koristimo SockJS
 		//registry.addEndpoint("/websocket-endpoint").withSockJS().setClientLibraryUrl("/lib/sockjs.min.js").setInterceptors(getInterceptor()).setSessionCookieNeeded(false);
 		
-		registry.addEndpoint("/websocket-endpoint").setAllowedOrigins("*").addInterceptors(getInterceptor());
+		registry.addEndpoint("/websocket-endpoint").setAllowedOrigins("http://localhost:4200").addInterceptors(getInterceptor());
 	}
 	
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.enableSimpleBroker("/topic");
+		registry.setApplicationDestinationPrefixes("/app");
+	}
 	
 	private HandshakeInterceptor getInterceptor() {
         return new HandshakeInterceptor(){
@@ -61,6 +60,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             		return true;
             	}
             	catch (Exception e) {
+            		System.out.println("Could not connect to gazepoint client.");
             		response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
             		return false;
 				}

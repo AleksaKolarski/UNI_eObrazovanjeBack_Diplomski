@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +31,7 @@ import com.projekat.eObrazovanje.service.ResultService;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin
 public class ApiController {
 
 	@Autowired
@@ -97,11 +98,11 @@ public class ApiController {
 		return resultsDTO;
 	}
 	
-	@PostMapping("/results/{name}")
-	public ResponseEntity<String> submit(@PathVariable("name") String name, @RequestBody ResultDTO resultDTO){	
+	@PostMapping("/results")
+	public ResponseEntity<String> submit(@RequestBody ResultDTO resultDTO){	
 		
 		Result result = new Result();
-		result.setName(name);
+		result.setName(resultDTO.getName());
 		result = rService.save(result);
 		
 		for(QuestionAnswerPairDTO qapDTO: resultDTO.getAnswers()) {	

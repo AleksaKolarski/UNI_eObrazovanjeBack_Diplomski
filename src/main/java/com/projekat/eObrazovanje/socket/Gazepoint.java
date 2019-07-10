@@ -102,7 +102,7 @@ public class Gazepoint {
 	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (millis/10.0) % 1920, (millis/10.0) % 1080));
 	    			
 	    			Point p = d.getCursorLocation();
-	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x/monitorWidth, (double)p.y/monitorHeight));
+	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x/(monitorWidth-1), (double)p.y/(monitorHeight-1)));
 	    			
 	    			//System.out.println("sending " + p.x + " " + p.y);
 	    		}
