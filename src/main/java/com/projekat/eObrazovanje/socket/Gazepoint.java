@@ -20,6 +20,13 @@ import com.projekat.eObrazovanje.model.Eye;
 @Component
 public class Gazepoint {
 	
+	
+	/**
+	 * Ova klasa i mora da se napise bolje. Tredovi nisu iskorisceni kako treba. 
+	 */
+	
+	
+	
 	private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
