@@ -22,10 +22,8 @@ public class Gazepoint {
 	
 	
 	/**
-	 * Ova klasa i mora da se napise bolje. Tredovi nisu iskorisceni kako treba. 
+	 * Ova klasa mora da se napise bolje. Tredovi nisu iskorisceni kako treba. 
 	 */
-	
-	
 	
 	private Socket clientSocket;
     private PrintWriter out;
