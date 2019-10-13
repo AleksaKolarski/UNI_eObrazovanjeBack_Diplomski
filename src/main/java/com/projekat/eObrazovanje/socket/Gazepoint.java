@@ -17,7 +17,7 @@ import com.projekat.eObrazovanje.model.Eye;
 
 // port 4242
 
-@Component
+//@Component
 public class Gazepoint {
 	
 	

@@ -1,5 +1,6 @@
 package com.projekat.eObrazovanje.config;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +25,18 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+import com.projekat.eObrazovanje.service.GazepointService;
 import com.projekat.eObrazovanje.socket.Gazepoint;
 
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
-	@Autowired
-	Gazepoint client;
+	//@Autowired
+	//Gazepoint client;
 	
+	@Autowired
+	GazepointService gazepointService;
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -56,10 +60,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {            	
             	System.out.println("client trying to connect");
             	try {
-            		client.startConnection("127.0.0.1", 4242);
+            		//client.startConnection("127.0.0.1", 4242);
+            		gazepointService.start();
             		return true;
             	}
-            	catch (Exception e) {
+            	catch (IOException e) {
             		System.out.println("Could not connect to gazepoint client.");
             		response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
             		return false;
@@ -96,13 +101,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	    @EventListener
 	    private void handleSessionDisconnect(SessionDisconnectEvent event) {
 	    	System.out.println("client disconected");
-	    	client.stopConnection();
+	    	//client.stopConnection();
+	    	gazepointService.stop();
 	    }
 
 	    @EventListener
 	    private void handleSessionUnsubscribeEvent(SessionUnsubscribeEvent event) {
         	System.out.println("client unsubscribed");
-        	client.stopConnection();
+        	//client.stopConnection();
+        	gazepointService.stop();
 	    }
 	}
 }
