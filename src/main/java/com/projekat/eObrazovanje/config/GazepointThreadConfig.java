@@ -1,22 +1,20 @@
 package com.projekat.eObrazovanje.config;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
-@Qualifier("threadPoolTaskExecutor")
-public class ThreadConfig {
+public class GazepointThreadConfig {
 	
 	@Bean
-    public TaskExecutor threadPoolTaskExecutor() {
- 
+    public TaskExecutor gazepointTaskExecutor() {
+		
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(1);
-        executor.setMaxPoolSize(4);
-        executor.setThreadNamePrefix("default_task_executor_thread");
+        executor.setMaxPoolSize(1);
+        executor.setThreadNamePrefix("gazepointThreadTaskExecutor");
         executor.initialize();
  
         return executor;

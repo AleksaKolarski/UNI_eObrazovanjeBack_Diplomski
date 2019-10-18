@@ -26,7 +26,7 @@ public class Log {
 	@Column(name = "after1", unique = false, nullable = false)
 	private Integer after;
 	
-	@Column(name = "time", nullable = false)
+	@Column(name = "time", nullable = false, columnDefinition = "DATETIME(3)")
 	private Date time;
 	
 	@ManyToOne

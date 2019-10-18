@@ -7,8 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Display;
+//import org.eclipse.swt.graphics.Point;
+//import org.eclipse.swt.widgets.Display;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -72,9 +72,9 @@ public class Gazepoint {
     
     
     public void startStreamParse() {
-    	Display d = new Display();
-    	int monitorWidth = d.getPrimaryMonitor().getBounds().width;
-    	int monitorHeight = d.getPrimaryMonitor().getBounds().height;
+    	//Display d = new Display();
+    	//int monitorWidth = d.getPrimaryMonitor().getBounds().width;
+    	//int monitorHeight = d.getPrimaryMonitor().getBounds().height;
     	
     	//out.print("<SET ID=\"ENABLE_SEND_TIME\" STATE=\"1\" />\r\n");
     	out.print("<SET ID=\"ENABLE_SEND_POG_FIX\" STATE=\"1\" />\r\n");
@@ -106,14 +106,14 @@ public class Gazepoint {
 	    			//long millis=System.currentTimeMillis();
 	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (millis/10.0) % 1920, (millis/10.0) % 1080));
 	    			
-	    			Point p = d.getCursorLocation();
-	    			template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x/(monitorWidth-1), (double)p.y/(monitorHeight-1)));
+	    			//Point p = d.getCursorLocation();
+	    			//template.convertAndSend("/topic/gazepoint-data", new Eye(true, (double)p.x/(monitorWidth-1), (double)p.y/(monitorHeight-1)));
 	    			
 	    			//System.out.println("sending " + p.x + " " + p.y);
 	    		}
 			} catch (Exception e) {
 				System.out.println("Lost connection with gazepoint server.");
-				d.dispose();
+				//d.dispose();
 				stopConnection();
 				break;
 			}

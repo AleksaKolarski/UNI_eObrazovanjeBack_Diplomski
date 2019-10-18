@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +17,7 @@ import com.projekat.eObrazovanje.dto.LogDTO;
 import com.projekat.eObrazovanje.dto.QuestionAnswerPairDTO;
 import com.projekat.eObrazovanje.dto.QuestionDTO;
 import com.projekat.eObrazovanje.dto.ResultDTO;
+import com.projekat.eObrazovanje.dto.ResultNameDTO;
 import com.projekat.eObrazovanje.model.Answer;
 import com.projekat.eObrazovanje.model.Log;
 import com.projekat.eObrazovanje.model.Question;
@@ -31,7 +32,7 @@ import com.projekat.eObrazovanje.service.ResultService;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
+//@CrossOrigin
 public class ApiController {
 
 	@Autowired
@@ -53,19 +54,25 @@ public class ApiController {
 	@GetMapping("/questions")
 	public ResponseEntity<List<QuestionDTO>> getQuestions(){
 		
-		//List<Question> questions = qService.findRandom(10);
 		List<Question> questions = qService.findRandomBetter(10);
-		
-		/*
-		System.out.println("\n\n");
-		for(Question  q: questions) {
-			System.out.println(q.getId());
-		}
-		*/
-		
 		List<QuestionDTO> questionsDTO = QuestionDTO.listToListDTO(questions);
 		
 		return new ResponseEntity<>(questionsDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/questions/all")
+	public ResponseEntity<List<QuestionDTO>> getAllQuestions(){
+		List<Question> questions = qService.findAll();
+		List<QuestionDTO> questionsDTO = QuestionDTO.listToListDTO(questions);
+		
+		return new ResponseEntity<>(questionsDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/questions/{id}")
+	public ResponseEntity<QuestionDTO> getQuestionById(@PathVariable("id") Integer id){
+		Question question = qService.findById(id);
+		QuestionDTO questionDTO = new QuestionDTO(question);
+		return new ResponseEntity<QuestionDTO>(questionDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping("/questions")
@@ -89,13 +96,33 @@ public class ApiController {
 		return new QuestionDTO(question);
 	}
 	
+	@GetMapping("/results/names")
+	public ResponseEntity<List<ResultNameDTO>> getAllResultsNames(){
+		
+		List<Result> results = rService.findAll();
+		List<ResultNameDTO> resultsNamesDTO = ResultNameDTO.listToListDTO(results);
+		
+		return new ResponseEntity<List<ResultNameDTO>>(resultsNamesDTO, HttpStatus.OK);
+	}
+	
+	@GetMapping("/results/getById/{id}")
+	public ResponseEntity<ResultDTO> getResultByID(@PathVariable("id") Integer id){
+		
+		Result result = rService.findById(id);
+		if(result == null) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return new ResponseEntity<ResultDTO>(new ResultDTO(result), HttpStatus.OK);
+	}
+	
 	@GetMapping("/results")
-	public List<ResultDTO> getAllResults(){
+	public ResponseEntity<List<ResultDTO>> getAllResults(){
 		
 		List<Result> results = rService.findAll();
 		List<ResultDTO> resultsDTO = ResultDTO.listToListDTO(results);
 		
-		return resultsDTO;
+		return new ResponseEntity<List<ResultDTO>>(resultsDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping("/results")

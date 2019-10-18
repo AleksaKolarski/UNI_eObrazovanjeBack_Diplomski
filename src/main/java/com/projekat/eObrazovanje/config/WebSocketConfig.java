@@ -9,13 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -26,7 +20,6 @@ import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
 import com.projekat.eObrazovanje.service.GazepointService;
-import com.projekat.eObrazovanje.socket.Gazepoint;
 
 @Configuration
 @EnableWebSocketMessageBroker
@@ -50,7 +43,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/topic");
-		registry.setApplicationDestinationPrefixes("/app");
+		//registry.setApplicationDestinationPrefixes("/app");
 	}
 	
 	private HandshakeInterceptor getInterceptor() {
@@ -77,23 +70,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         };
     }
 	
-	public class FilterChannelInterceptor implements ChannelInterceptor {
-	    @Override
-	    public Message<?> preSend(Message<?> message, MessageChannel channel) {
-	        StompHeaderAccessor headerAccessor= StompHeaderAccessor.wrap(message);
-	        if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
-	        	// ako ovo iskoristimo za konektovanje ka gazepoint serveru 
-	        	// onda u slucaju odbijanja websocket konekcije konekcija ka 
-	        	// gazepointu ostane ukljucena ???
-	        }
-	        return message;
-	    }
-	}
-	
-	@Override
-	public void configureClientInboundChannel(ChannelRegistration registration) {
-		registration.interceptors(new FilterChannelInterceptor());
-	}
+//	public class FilterChannelInterceptor implements ChannelInterceptor {
+//	    @Override
+//	    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//	        StompHeaderAccessor headerAccessor= StompHeaderAccessor.wrap(message);
+//	        if (StompCommand.SUBSCRIBE.equals(headerAccessor.getCommand())) {
+//	        	// ako ovo iskoristimo za konektovanje ka gazepoint serveru 
+//	        	// onda u slucaju odbijanja websocket konekcije konekcija ka 
+//	        	// gazepointu ostane ukljucena ???
+//	        }
+//	        return message;
+//	    }
+//	}
+//	
+//	@Override
+//	public void configureClientInboundChannel(ChannelRegistration registration) {
+//		registration.interceptors(new FilterChannelInterceptor());
+//	}
 	
 	@Component
 	public class StompEventListener {

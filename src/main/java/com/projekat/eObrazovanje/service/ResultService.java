@@ -32,6 +32,5 @@ public class ResultService implements ResultServiceInterface {
 	@Override
 	public void remove(Result result) {
 		resultRepository.delete(result);
-	}
-
+	}	
 }
